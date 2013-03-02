@@ -30,8 +30,18 @@
 
 - (IBAction) shareThisButtonTouched: (id) sender
 {
-    self.activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[textField.text] applicationActivities:nil];
-    [self presentViewController:self.activityViewController animated:YES completion:nil];
+    if([textField.text length] > 0)
+    {
+        // look to see if our text is actually a web page link
+        if([textField.text compare: @"http://" options: NSCaseInsensitiveSearch range: NSMakeRange(0, 7)] == NSOrderedSame)
+        {
+            NSArray * activityItem = [NSArray arrayWithObject: [NSURL URLWithString: textField.text]];
+            self.activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItem applicationActivities:nil];
+        } else {
+            self.activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[textField.text] applicationActivities:nil];
+        }
+        [self presentViewController:self.activityViewController animated:YES completion:nil];
+    }
 }
 
 @end
